@@ -1,7 +1,6 @@
 = Sinatra
 
-Sinatra is a DSL for quickly creating web applications in Ruby with minimal
-effort:
+Sinatra 是一个使用ruby 快速创建web 应用程序 的 DSL
 
   # myapp.rb
   require 'sinatra'
@@ -17,13 +16,11 @@ Install the gem and run with:
 
 View at: http://localhost:4567
 
-It is recommended to also run <tt>gem install thin</tt>, which Sinatra will
-pick up if available.
+它也建议运行  gem install thin,
 
-== Routes
+路由
 
-In Sinatra, a route is an HTTP method paired with a URL-matching pattern.
-Each route is associated with a block:
+在Sinatra 一个路由是http方法配对一个url路径模式，每个路由都和块相关联
 
   get '/' do
     .. show something ..
@@ -49,11 +46,9 @@ Each route is associated with a block:
     .. appease something ..
   end
 
-Routes are matched in the order they are defined. The first route that
-matches the request is invoked.
+路由匹配是按定义顺序进行. 第一个匹配路由被调用.
 
-Route patterns may include named parameters, accessible via the
-<tt>params</tt> hash:
+路由模式使用命名参数，能过hash参数
 
   get '/hello/:name' do
     # matches "GET /hello/foo" and "GET /hello/bar"
@@ -61,14 +56,14 @@ Route patterns may include named parameters, accessible via the
     "Hello #{params[:name]}!"
   end
 
-You can also access named parameters via block parameters:
+你也可以通过一个块参数来访问命名参数 
 
   get '/hello/:name' do |n|
     "Hello #{n}!"
   end
 
-Route patterns may also include splat (or wildcard) parameters, accessible
-via the <tt>params[:splat]</tt> array:
+路由模式也可以包括通配符，通过params[:splat]数组参数调用
+
 
   get '/say/*/to/*' do
     # matches /say/hello/to/world
@@ -80,36 +75,36 @@ via the <tt>params[:splat]</tt> array:
     params[:splat] # => ["path/to/file", "xml"]
   end
 
-Or with block parameters:
+或利用块
 
   get '/download/*.*' do |path, ext|
     [path, ext] # => ["path/to/file", "xml"]
   end
 
-Route matching with Regular Expressions:
+使用正则表达式
 
   get %r{/hello/([\w]+)} do
     "Hello, #{params[:captures].first}!"
   end
 
-Or with a block parameter:
+或块表达式
 
   get %r{/hello/([\w]+)} do |c|
     "Hello, #{c}!"
   end
 
-Route patterns may have optional parameters:
+使用任选参数
 
   get '/posts.?:format?' do
     # matches "GET /posts" and any extension "GET /posts.json", "GET /posts.xml" etc.
   end
+  
+随便说下，如果你的路径遍历保护失效，那访问路径在你配置之前可能被修改
 
-By the way, unless you disable the path traversal attack protection (see below),
-the request path might be modified before matching against your routes.
 
-=== Conditions
+=== 条件 
 
-Routes may include a variety of matching conditions, such as the user agent:
+路由可能包含各和匹配条件，比如用户代理
 
   get '/foo', :agent => /Songbird (\d\.\d)[\d\/]*?/ do
     "You're using Songbird version #{params[:agent][0]}"
@@ -119,7 +114,7 @@ Routes may include a variety of matching conditions, such as the user agent:
     # Matches non-songbird browsers
   end
 
-Other available conditions are +host_name+ and +provides+:
+其它可用条件还有 host_name 和 provides;
 
   get '/', :host_name => /^admin\./ do
     "Admin Area, Access denied!"
@@ -133,7 +128,7 @@ Other available conditions are +host_name+ and +provides+:
     builder :feed
   end
 
-You can easily define your own conditions:
+你也可以很容易的定义自己的条件
 
   set(:probability) { |value| condition { rand <= value } }
 
@@ -145,7 +140,9 @@ You can easily define your own conditions:
     "Sorry, you lost."
   end
 
+
 For a condition that takes multiple values use a splat:
+（利用一个通配符设置多值条件，数据形式）
 
   set(:auth) do |*roles|   # <- notice the splat here
     condition do
@@ -163,15 +160,18 @@ For a condition that takes multiple values use a splat:
     "Only admins are allowed here!"
   end
 
-=== Return Values
+=== Return Values（返回值）
 
 The return value of a route block determines at least the response body passed
 on to the HTTP client, or at least the next middleware in the Rack stack.
 Most commonly, this is a string, as in the above examples. But other values are
 also accepted.
+（通过路由中的块做为返回给客户的主要部分，或是通过中间架构，通常反回为字符串，如上面例子，
+但也有其它方式）
 
 You can return any object that would either be a valid Rack response, Rack
 body object or HTTP status code:
+（你可以返回任何对象，或是一个框架的回应，框架对象或是http状态码）
 
 * An Array with three elements: <tt>[status (Fixnum), headers (Hash), response
   body (responds to #each)]</tt>
